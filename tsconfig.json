@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+
+        "target": "ES2022",
+        "module": "NodeNext",
+        "strict": true,
+
+        "declaration": true,
+        "removeComments": true,
+
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "moduleResolution": "nodenext",
+
+        // "strictPropertyInitialization": false,
+
+        "esModuleInterop": true,
+        "sourceMap": true,
+
+        "pretty": true,
+
+        "baseUrl": "./",
+        "rootDir": "./src",
+        "outDir": "./dist", 
+
+        "paths": {
+            "*": ["node_modules/*"],
+            "@common/*": ["src/common/*"],
+            "@config/*": ["src/config/*"],
+            "@core/*": ["src/core/*"],
+        }
+    },
+    "exclude": ["node_modules"],
+    "include": ["./src/**/*.ts", ".eslintrc.js"],
+    "ts-node": {
+        "files": true
+    }
+}
