@@ -92,10 +92,10 @@ export async function run(options: {
 		}
 
 		let successful = false;
-		let tries = 0;
+		let retries = 0;
 		let companyDetails;
 		// Try to fetch company TRIES_PER_COMPANY times
-		while (!successful && tries < options.triesPerCompany) {
+		while (!successful && retries < options.triesPerCompany) {
 			try {
 				companyDetails = await getCompanyDetails(url);
 				successful = true;
@@ -104,12 +104,12 @@ export async function run(options: {
 				if (error instanceof HttpStatusError) {
 					console.error(
 						chalk.red(
-							`\t[${tries + 1}/${options.triesPerCompany}]. Cannot fetch ${url}.\n\t\t${
+							`\t[${retries + 1}/${options.triesPerCompany}]. Cannot fetch ${url}.\n\t\t${
 								error.message
 							}`,
 						),
 					);
-					tries++;
+					retries++;
 					await delay(options.delayBetweenRetries);
 				}
 			}
@@ -124,6 +124,14 @@ export async function run(options: {
 					.replace(/\n+/g, '\n')
 					.replace(/^/gm, '\t');
 				console.log(`\n`, formatted, '\n');
+			} else {
+				if (retries !== 0) {
+					console.error(
+						chalk.green(
+							`\t[${retries + 1}/${options.triesPerCompany}]. Fetched ${url} successful.\n`,
+						),
+					);
+				}
 			}
 		}
 		await delay(options.delayBetweenCompanies);
