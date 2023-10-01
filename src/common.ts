@@ -1,7 +1,7 @@
 export interface CompanyShort {
 	name: string;
 	url: string;
-	rating: number;
+	rating: number | null;
 	employees: number;
 	reviews: number;
 }
@@ -11,7 +11,7 @@ export interface CompanyDetails {
 	legalName: string;
 	tags: string[];
 	foundationYear: number | null;
-	employees: {
+	employeesDetails: {
 		total?: number;
 		inBelarus?: number;
 		inBelarusNonIT?: number;
@@ -36,10 +36,7 @@ export interface CompanyDetails {
 	};
 }
 
-export interface Company extends CompanyDetails {
-	url: string;
-	reviews: number;
-}
+export interface Company extends CompanyShort, CompanyDetails {}
 
 export type Data = Array<Company>;
 

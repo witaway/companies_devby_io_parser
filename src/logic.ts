@@ -2,7 +2,7 @@ import { Low } from 'lowdb';
 import chalk from 'chalk';
 import { JSONFile } from 'lowdb/node';
 import YAML from 'yaml';
-import { Company, Data, HttpStatusError } from './common.js';
+import { Company, CompanyShort, Data, HttpStatusError } from './common.js';
 import { getCompanies, getCompanyDetails } from './companies.js';
 import * as fs from 'fs';
 import * as process from 'process';
@@ -61,20 +61,23 @@ export async function run(options: {
 	console.log(`Found ${companiesQuantity} companies`);
 
 	if (options.sort) {
-		companies.sort((company1, company2): number => {
-			if (options.sort!.key === 'name') {
-				return company1.name.localeCompare(company2.name);
+		const compareFn = function <T extends CompanyShort>(company1: T, company2: T): number {
+			const mul = options.sort!.order === 'desc' ? 1 : -1;
+			const key = options.sort!.key;
+			if (key === 'name') {
+				return mul * company1.name.localeCompare(company2.name);
 			} else {
-				const key = options.sort!.key;
-				const mul = options.sort!.order === 'desc' ? 1 : -1;
-				return mul * (company1[key] - company2[key]);
+				// || 0 - because some fields (like rating) migh be null
+				return mul * ((company2[key] || 0) - (company1[key] || 0));
 			}
-		});
+		};
+		companies.sort(compareFn);
+		db.data.sort(compareFn);
 		console.log('Sorting success');
 	}
 
 	let index = 0;
-	for (const { url, reviews } of companies) {
+	for (const { url, reviews, employees } of companies) {
 		index++;
 		// Log progress info
 		process.stdout.write(`Company [${index}/${companiesQuantity}] ${url}`);
@@ -113,7 +116,7 @@ export async function run(options: {
 		}
 		// And if fetching successful, save it
 		if (successful) {
-			const company = { url, reviews, ...companyDetails } as Company;
+			const company = { url, reviews, employees, ...companyDetails } as Company;
 			db.data.push(company);
 			await db.write();
 			if (options.full) {

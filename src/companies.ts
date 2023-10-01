@@ -200,7 +200,7 @@ export async function getCompanyDetails(companyUrl: string): Promise<CompanyDeta
 		legalName: parseLegalName(dom),
 		tags: parseTags(dom),
 		foundationYear: parseFoundationYear(dom),
-		employees: parseEmployees(dom),
+		employeesDetails: parseEmployees(dom),
 		description: parseDescription(dom),
 		rating: parseRating(dom),
 		contacts: parseContacts(dom),
