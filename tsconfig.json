@@ -25,13 +25,12 @@
 
         "paths": {
             "*": ["node_modules/*"],
-            "@common/*": ["src/common/*"],
-            "@config/*": ["src/config/*"],
-            "@core/*": ["src/core/*"],
         }
     },
-    "exclude": ["node_modules"],
-    "include": ["./src/**/*.ts", ".eslintrc.js"],
+    "exclude": ["node_modules",
+      ".eslintrc.cjs"
+    ],
+    "include": ["./src/**/*.ts"],
     "ts-node": {
         "files": true
     }
